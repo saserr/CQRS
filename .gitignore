@@ -1,0 +1,22 @@
+# SBT
+lib_managed/
+project/boot/
+src_managed/
+target/
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# IntelliJ Idea
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Eclipse
+.cache
+.classpath
+.metadata
+.project
+.settings/
