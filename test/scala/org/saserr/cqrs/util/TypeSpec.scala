@@ -88,7 +88,7 @@ class TypeSpec extends Spec {
         (Type[A] == Type[B]) should be(false)
       }
 
-      "its generic types are different" in {
+      "its generic arguments are different" in {
         (Type[D[A]] == Type[D[B]]) should be(false)
       }
     }

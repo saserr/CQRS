@@ -16,7 +16,8 @@
 
 package org.saserr.cqrs
 
-import org.saserr.cqrs.util.Lens
+import scalaz.@>
+import scalaz.Lens.lensu
 
 trait Version[-Value] {
   def apply(value: Value): Long
@@ -32,9 +33,9 @@ case class Versioned[+Value](version: Long, value: Value) {
 
 object Versioned {
 
-  def version[A]: Lens[Versioned[A], Long] = Lens(_.version, (versioned, version) => versioned.copy(version = version))
+  def version[A]: Versioned[A] @> Long = lensu((versioned, version) => versioned.copy(version = version), _.version)
 
-  def value[A]: Lens[Versioned[A], A] = Lens(_.value, (versioned, value) => versioned.copy(value = value))
+  def value[A]: Versioned[A] @> A = lensu((versioned, value) => versioned.copy(value = value), _.value)
 
   implicit def hasVersion[A]: Version[Versioned[A]] = new Version[Versioned[A]] {
     override def apply(value: Versioned[A]) = value.version

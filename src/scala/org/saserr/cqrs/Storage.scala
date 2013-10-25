@@ -22,14 +22,14 @@ import java.io.Serializable
 
 import scala.collection.immutable.{Set, Traversable, Vector}
 
-import org.saserr.cqrs.util.ReadLens
+import scalaz.@>
 
 abstract class Storage[Key, Value <: Serializable, F[A] <: Traversable[A]]
 (private val version: Long, private val vals: F[Versioned[Value]]) extends Serializable {
 
-  @transient protected def key: ReadLens[Value, Key]
+  @transient protected def key: Value @> Key
 
-  @transient private[this] lazy val byKey = vals.map(v => key(v.value) -> v).toMap
+  @transient private[this] lazy val byKey = vals.map(v => key.get(v.value) -> v).toMap
   @transient lazy val values = vals.to[Vector].map(_.value)
   @transient lazy val keys: Set[Key] = byKey.keySet
 
