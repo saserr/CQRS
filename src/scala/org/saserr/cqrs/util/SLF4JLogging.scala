@@ -26,32 +26,28 @@ trait SLF4JLogging extends Logging {
 
       @transient private[this] lazy val log = SLF4JLoggerFactory.getLogger(name)
 
-      override final def isEnabled(level: Logging.Level) =
-        level match {
-          case Debug => log.isDebugEnabled
-          case Info => log.isInfoEnabled
-          case Warn => log.isWarnEnabled
-          case Error => log.isErrorEnabled
-        }
+      override final def isEnabled(level: Logging.Level) = level match {
+        case Debug => log.isDebugEnabled
+        case Info => log.isInfoEnabled
+        case Warn => log.isWarnEnabled
+        case Error => log.isErrorEnabled
+      }
 
-      override final def logAt(level: Logging.Level)
-                              (message: => String, cause: Option[Throwable] = None) {
+      override final def logAt(level: Logging.Level)(message: => String, cause: Option[Throwable] = None) {
         if (isEnabled(level))
           cause match {
-            case Some(exception) =>
-              level match {
-                case Debug => log.debug(message, exception)
-                case Info => log.info(message, exception)
-                case Warn => log.warn(message, exception)
-                case Error => log.error(message, exception)
-              }
-            case _ =>
-              level match {
-                case Debug => log.debug(message)
-                case Info => log.info(message)
-                case Warn => log.warn(message)
-                case Error => log.error(message)
-              }
+            case Some(exception) => level match {
+              case Debug => log.debug(message, exception)
+              case Info => log.info(message, exception)
+              case Warn => log.warn(message, exception)
+              case Error => log.error(message, exception)
+            }
+            case _ => level match {
+              case Debug => log.debug(message)
+              case Info => log.info(message)
+              case Warn => log.warn(message)
+              case Error => log.error(message)
+            }
           }
       }
     }

@@ -44,13 +44,12 @@ trait Logger {
     if (isErrorEnabled) logAt(Error)(message, cause)
   }
 
-  def isEnabled(level: Logging.Level): Boolean =
-    level match {
-      case Debug => isDebugEnabled
-      case Info => isInfoEnabled
-      case Warn => isWarnEnabled
-      case Error => isErrorEnabled
-    }
+  def isEnabled(level: Logging.Level): Boolean = level match {
+    case Debug => isDebugEnabled
+    case Info => isInfoEnabled
+    case Warn => isWarnEnabled
+    case Error => isErrorEnabled
+  }
 
   def logAt(level: Logging.Level)(message: => String, cause: Option[Throwable] = None) {
     if (isEnabled(level))

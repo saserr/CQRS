@@ -25,7 +25,7 @@ import scala.reflect.ClassTag
 import scala.reflect.api.{Mirror, TypeCreator, Universe}
 import scala.reflect.ManifestFactory.classType
 import scala.reflect.runtime.currentMirror
-import scala.reflect.runtime.universe._
+import scala.reflect.runtime.universe.{manifestToTypeTag, TypeRef, TypeTag}
 
 trait Type[A] extends Serializable with Equals {
 

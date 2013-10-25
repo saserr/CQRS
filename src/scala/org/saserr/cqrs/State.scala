@@ -41,22 +41,22 @@ abstract class State[BaseEvent <: Serializable, Storage <: Serializable](init: S
 
   protected def name: String
 
-  protected type Command[Message] = cqrs.Command[BaseEvent, Message, Storage]
+  protected type Command[Payload] = cqrs.Command[BaseEvent, Payload, Storage]
 
-  private[this] val log = logger.create(s"cqrs.State[$name]")
+  private[this] val log = logger.create(s"CQRS.State[$name]")
   private[this] val data = Ref(init)
 
   object Protocol {
 
-    case class Execute[Message](version: Long, message: Message)(implicit command: Command[Message]) {
+    case class Execute[Payload](version: Long, payload: Payload)(implicit command: Command[Payload]) {
 
       def apply(commited: List[Typed[_ <: BaseEvent]], storage: Storage, replyTo: ActorRef)
                (onSuccess: Set[Typed[_ <: BaseEvent]] => Unit) {
-        command(message, storage) match {
+        command(payload, storage) match {
           case Command.Result.Failure(reason) => replyTo ! State.Result.Failure(reason)
           case Command.Result.Success(toCommit) if toCommit.isEmpty => replyTo ! State.Result.Success
           case Command.Result.Success(toCommit) =>
-            log.debug(s"Command $message produced $toCommit")
+            log.debug(s"Command $payload produced $toCommit")
             conflicts(toCommit.toList, commited) match {
               case Execute.Resolution.Ok(events) => onSuccess(events)
               case Execute.Resolution.Failure(reason) => replyTo ! State.Result.Failure(reason)
@@ -105,8 +105,8 @@ abstract class State[BaseEvent <: Serializable, Storage <: Serializable](init: S
 
     object Execute {
 
-      def apply[Message](message: Versioned[Message])(implicit command: Command[Message]): Execute[Message] =
-        new Execute[Message](message.version, message.value)
+      def apply[Payload](payload: Versioned[Payload])(implicit command: Command[Payload]): Execute[Payload] =
+        new Execute[Payload](payload.version, payload.value)
 
       sealed trait Resolution
 
@@ -252,8 +252,8 @@ abstract class State[BaseEvent <: Serializable, Storage <: Serializable](init: S
 
     override def single = data.single
 
-    def execute[Message: Command](message: Versioned[Message])(implicit timeout: Timeout): Future[State.Result[BaseEvent]] =
-      (actor ? Protocol.Execute(message)).mapTo[State.Result[BaseEvent]]
+    def execute[Payload: Command](payload: Versioned[Payload])(implicit timeout: Timeout): Future[State.Result[BaseEvent]] =
+      (actor ? Protocol.Execute(payload)).mapTo[State.Result[BaseEvent]]
   }
 
   private class Gather[A](id: Int, journal: ActorRef, execute: Protocol.Execute[A], replyTo: ActorRef) extends Actor {

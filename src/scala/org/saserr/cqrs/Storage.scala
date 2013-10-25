@@ -25,12 +25,12 @@ import scala.collection.immutable.{Set, Traversable, Vector}
 import scalaz.@>
 
 abstract class Storage[Key, Value <: Serializable, F[A] <: Traversable[A]]
-(private val version: Long, private val vals: F[Versioned[Value]]) extends Serializable {
+(private val version: Long, private val f: F[Versioned[Value]]) extends Serializable {
 
   @transient protected def key: Value @> Key
 
-  @transient private[this] lazy val byKey = vals.map(v => key.get(v.value) -> v).toMap
-  @transient lazy val values = vals.to[Vector].map(_.value)
+  @transient private[this] lazy val byKey = f.map(v => key.get(v.value) -> v).toMap
+  @transient lazy val values = f.to[Vector].map(_.value)
   @transient lazy val keys: Set[Key] = byKey.keySet
 
   def contains(key: Key): Boolean = byKey contains key

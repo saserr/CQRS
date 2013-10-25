@@ -25,8 +25,7 @@ trait NoLogging extends Logging {
 
       override final def isEnabled(level: Logging.Level) = false
 
-      override final def logAt(level: Logging.Level)
-                              (message: => String, cause: Option[Throwable] = None) {}
+      override final def logAt(level: Logging.Level)(message: => String, cause: Option[Throwable] = None) {}
     }
   }
 }

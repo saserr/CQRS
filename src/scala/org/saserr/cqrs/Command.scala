@@ -20,9 +20,9 @@ import scala.collection.immutable.Set
 
 import org.saserr.cqrs.util.Typed
 
-trait Command[BaseEvent, Message, Storage] extends ((Message, Storage) => Command.Result[BaseEvent]) {
+trait Command[BaseEvent, Payload, Storage] extends ((Payload, Storage) => Command.Result[BaseEvent]) {
 
-  override def apply(message: Message, storage: Storage): Command.Result[BaseEvent]
+  override def apply(message: Payload, storage: Storage): Command.Result[BaseEvent]
 
   protected val Result = Command.Result
 }
