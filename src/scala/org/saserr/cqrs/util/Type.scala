@@ -38,9 +38,7 @@ trait Type[A] extends Serializable with Equals {
   def klass: Class[A]
 
   def arguments: Seq[Type[_]] = {
-    val manifests = manifest.typeArguments.to[Vector] map {
-      _.asInstanceOf[Manifest[Any]]
-    }
+    val manifests = manifest.typeArguments.to[Vector].map(_.asInstanceOf[Manifest[Any]])
     val typeTags = typeTag.tpe match {
       case TypeRef(_, _, tags) => tags.to[Vector] map {
         tag => TypeTag(currentMirror, new TypeCreator {
@@ -60,8 +58,7 @@ trait Type[A] extends Serializable with Equals {
   override lazy val hashCode = classTag.hashCode()
 
   override def equals(other: Any) = other match {
-    case that: Type[_] =>
-      (that canEqual this) && (this <:< that) && (that <:< this)
+    case that: Type[_] => (that canEqual this) && (this <:< that) && (that <:< this)
     case _ => false
   }
 
@@ -69,8 +66,7 @@ trait Type[A] extends Serializable with Equals {
 
   override lazy val toString = typeTag.tpe.toString
 
-  @throws[ObjectStreamException] def writeReplace(): AnyRef =
-    new Type.Serialized(klass.getName, arguments)
+  @throws[ObjectStreamException] def writeReplace(): AnyRef = new Type.Serialized(klass.getName, arguments)
 }
 
 object Type {
@@ -100,9 +96,7 @@ object Type {
     }).asInstanceOf[Class[A]]
     val manifest =
       (if (args.isEmpty) classType(klass)
-      else classType(klass, args.head.manifest, args.tail map {
-        _.manifest
-      }: _*)).asInstanceOf[Manifest[A]]
+      else classType(klass, args.head.manifest, args.tail.map(_.manifest): _*)).asInstanceOf[Manifest[A]]
     val typeTag = manifestToTypeTag(currentMirror, manifest).asInstanceOf[TypeTag[A]]
 
     apply[A](manifest, typeTag)

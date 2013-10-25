@@ -25,9 +25,13 @@ import scala.reflect.runtime.universe.typeTag
 class TypeSpec extends Spec {
 
   class A
+
   class U extends A
+
   class B
+
   class D[X]
+
   class E[X, Y]
 
   def serialize[X](implicit typeA: Type[X]): Array[Byte] = {
@@ -63,11 +67,30 @@ class TypeSpec extends Spec {
       Type[A].klass should be(classOf[A])
     }
 
-    "return the correct argument Types" in {
+    "return no generic argument Types when it has none" in {
+      val typeA = Type[A]
+      typeA.arguments should be(empty)
+    }
+
+    "return its generic arguments as Types when it has them" in {
       val typeDA = Type[D[A]]
 
       typeDA.arguments should have length 1
       typeDA.arguments(0) should be(Type[A])
+    }
+
+    "be equal to itself" in {
+      (Type[A] == Type[A]) should be(true)
+    }
+
+    "be different" when {
+      "compared to other type" in {
+        (Type[A] == Type[B]) should be(false)
+      }
+
+      "its generic types are different" in {
+        (Type[D[A]] == Type[D[B]]) should be(false)
+      }
     }
   }
 
