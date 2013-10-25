@@ -51,5 +51,5 @@ trait EventHandling[BaseEvent, Storage] {
     event(toCommit.tpe).map(_.conflicts(toCommit.value, commited.value)(commited.tpe))
 
   def update[Event <: BaseEvent](version: Long, toCommit: Typed[Event], storage: Storage): Option[Storage] =
-      event(toCommit.tpe).map(_.update(version, toCommit.value, storage))
+    event(toCommit.tpe).map(_.update(version, toCommit.value, storage))
 }

@@ -16,30 +16,22 @@
 
 package org.saserr.cqrs.util
 
-trait Logging {
+import scala.language.implicitConversions
 
-  protected def logger: LoggerFactory
+import scala.reflect.ClassTag
+import scala.reflect.ManifestFactory.classType
 
-  trait LoggerFactory {
-    def create(name: Logger.Name): Logger
+import org.scalatest.mock.MockitoSugar
+
+import org.mockito.invocation.InvocationOnMock
+import org.mockito.stubbing.Answer
+
+trait Mocking {
+
+  def mock[A <: AnyRef](name: String)(implicit ct: ClassTag[A]): A =
+    MockitoSugar.mock[A](name)(classType(ct.runtimeClass))
+
+  implicit def functionToAnswer[A](f: Array[AnyRef] => A): Answer[A] = new Answer[A] {
+    override def answer(invocation: InvocationOnMock) = f(invocation.getArguments)
   }
-
-}
-
-object Logging {
-
-  sealed trait Level
-
-  object Level {
-
-    case object Debug extends Level
-
-    case object Info extends Level
-
-    case object Warn extends Level
-
-    case object Error extends Level
-
-  }
-
 }

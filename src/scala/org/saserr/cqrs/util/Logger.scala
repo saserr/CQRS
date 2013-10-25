@@ -21,21 +21,25 @@ trait Logger {
   import org.saserr.cqrs.util.Logging.Level._
 
   def isDebugEnabled: Boolean = isEnabled(Debug)
+
   def debug(message: => String, cause: Option[Throwable] = None) {
     if (isDebugEnabled) logAt(Debug)(message, cause)
   }
 
   def isInfoEnabled: Boolean = isEnabled(Info)
+
   def info(message: => String, cause: Option[Throwable] = None) {
     if (isInfoEnabled) logAt(Info)(message, cause)
   }
 
   def isWarnEnabled: Boolean = isEnabled(Warn)
+
   def warn(message: => String, cause: Option[Throwable] = None) {
     if (isWarnEnabled) logAt(Warn)(message, cause)
   }
 
   def isErrorEnabled: Boolean = isEnabled(Error)
+
   def error(message: => String, cause: Option[Throwable] = None) {
     if (isErrorEnabled) logAt(Error)(message, cause)
   }

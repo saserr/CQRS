@@ -14,32 +14,15 @@
  * limitations under the License.
  */
 
-package org.saserr.cqrs.util
+package org.saserr.cqrs
 
-trait Logging {
+import org.scalatest.{BeforeAndAfterEach, Matchers, OptionValues, WordSpec}
 
-  protected def logger: LoggerFactory
+import org.saserr.cqrs.util.{Mocking, Randoms}
 
-  trait LoggerFactory {
-    def create(name: Logger.Name): Logger
-  }
-
-}
-
-object Logging {
-
-  sealed trait Level
-
-  object Level {
-
-    case object Debug extends Level
-
-    case object Info extends Level
-
-    case object Warn extends Level
-
-    case object Error extends Level
-
-  }
-
-}
+trait Spec extends WordSpec
+           with BeforeAndAfterEach
+           with Matchers
+           with OptionValues
+           with Mocking
+           with Randoms
