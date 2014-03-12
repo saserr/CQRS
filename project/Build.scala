@@ -68,13 +68,13 @@ object Dependency {
   }
 
   object Scalaz {
-    val version = "7.0.3"
+    val version = "7.0.6"
     val core = "org.scalaz" %% "scalaz-core" % version
     val iteratee = "org.scalaz" %% "scalaz-iteratee" % version
   }
 
   object Akka {
-    val version = "2.2.1"
+    val version = "2.3.0"
     val actor = "com.typesafe.akka" %% "akka-actor" % version
     val testkit = "com.typesafe.akka" %% "akka-testkit" % version
   }
@@ -90,22 +90,22 @@ object Dependency {
   }
 
   object Joda {
-    val convert = "org.joda" % "joda-convert" % "1.5"
+    val convert = "org.joda" % "joda-convert" % "1.6"
     val time = "joda-time" % "joda-time" % "2.3"
   }
 
   object SLF4J {
-    val version = "1.7.5"
+    val version = "1.7.6"
     val api = "org.slf4j" % "slf4j-api" % version
   }
 
   object Logback {
-    val version = "1.0.13"
+    val version = "1.1.1"
     val classic = "ch.qos.logback" % "logback-classic" % version
   }
 
   object ScalaTest {
-    val version = "2.0.RC1"
+    val version = "2.1.0"
     val core = "org.scalatest" %% "scalatest" % version
   }
 
